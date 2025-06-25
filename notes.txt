@@ -1,0 +1,14 @@
+img estimation duraiton 10 - 12 seconds  
+4 * 10 seconds = 40 , 1 img prompt
+
+43 50 100 114
+
+in generating the images, we have two options
+    * exact 1 img injection (when we img gen, we only get one img)
+    * loose binding (we get all images, we only need to have the start img to be accurate, then stretch the others until the next stop)
+
+img injection takes a long ass time but is curated 
+
+NEW IDEA: 
+    * we still use all 4 images and curate it
+    * we need to let the script gen know that we have 4 versions of images for the same topic so it uses it with number , ie. p1a, p1b, p1c, p1d
