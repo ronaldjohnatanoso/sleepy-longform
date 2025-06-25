@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "googleapis": "^150.0.1",
+    "puppeteer-core": "^24.10.2"
+  }
+}

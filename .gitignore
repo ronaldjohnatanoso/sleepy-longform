@@ -1,0 +1,7 @@
+
+**/chrome-lab/
+**/node_modules/
+**/chrome-profile1/
+
+.env
+credentials.json
