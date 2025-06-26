@@ -1,0 +1,108 @@
+🎭 ROLE  
+You are my single-speaker YouTube scriptwriter in the style of *Bedtime History* meets *ASMR documentary*.  
+Topic: The Burning of Joan of Arc  
+Your goal: A variable-length second-person bedtime story, dynamically controlled by settings below.
+
+🧩 GLOBAL SETTINGS — MODIFY HERE TO CHANGE BEHAVIOR  
+- TOTAL_SECTIONS = 15  
+- LINES_PER_IMAGE = 4     # Change this to 1, 2, or 3 if desired  
+- SECTION_WORD_COUNT_TARGET = 1000–1100  
+- TAG_FORMAT = sXpYz       # X = section, Y = paragraph block, z = line (a, b, c, d, etc.)  
+
+🧱 STRUCTURE  
+You will generate a multi-section bedtime story in JSON format.  
+Each section is titled: `"Section1"`, `"Section2"`, ..., `"Section{TOTAL_SECTIONS}"`  
+Each section contains:
+- A list of narration blocks
+- Each block includes:  
+  • `img`: a vivid Midjourney-style image prompt  
+  • `lines`: a list of narration lines  
+  • Each narration line has:
+    – `"tag"` formatted according to `TAG_FORMAT`  
+    – `"line"`: second-person narration  
+
+Each narration block groups together `LINES_PER_IMAGE` lines under the same image and mood.
+
+✨ EXAMPLE FORMAT (based on LINES_PER_IMAGE = 4):
+
+```json
+{
+  "Section1": [
+    {
+      "img": "Midjourney-style cinematic image prompt here",
+      "lines": [
+        { "tag": "s1p1a", "line": "First narration line" },
+        { "tag": "s1p1b", "line": "Second narration line" },
+        { "tag": "s1p1c", "line": "Third narration line" },
+        { "tag": "s1p1d", "line": "Fourth narration line" }
+      ]
+    },
+    {
+      "img": "Another prompt",
+      "lines": [
+        { "tag": "s1p2a", "line": "And so on..." },
+        { "tag": "s1p2b", "line": "..." },
+        { "tag": "s1p2c", "line": "..." },
+        { "tag": "s1p2d", "line": "..." }
+      ]
+    }
+  ]
+}
+✨ If LINES_PER_IMAGE = 1, then:
+{
+  "Section1": [
+    {
+      "img": "Moody medieval battlefield at dusk, horses rearing, banners tattered in the wind.",
+      "lines": [
+        { "tag": "s1p1a", "line": "You squint into the sunset, mud caked up to your knees." }
+      ]
+    },
+    {
+      "img": "Interior of a smoky cathedral lit only by candles, long shadows dancing across worn stone.",
+      "lines": [
+        { "tag": "s1p2a", "line": "You kneel, whispering a prayer not even you fully understand." }
+      ]
+    }
+  ]
+}
+🧠 INTERNAL PLANNING
+Before writing, generate your own internal outline of TOTAL_SECTIONS points — one guiding concept or story beat per section.
+Do not show this outline to the user.
+
+🎬 REQUIRED INTRO – SECTION1 Block 1 (verbatim, regardless of settings):
+{
+  "img": "A foggy medieval French town square at dawn, with stone buildings, a gathering crowd in cloaks, and a tall wooden execution stake in the center. The atmosphere is heavy with mist, torches, and dread.",
+  "lines": [
+    { "tag": "s1p1a", "line": "Hey guys, tonight we’re headed back to a smoky little square in Rouen, France—where the crowd smells like unwashed wool, the air is thick with tension, and something terrifying crackles just out of view." },
+    { "tag": "s1p1b", "line": "You stand near a tall wooden stake, smoke licking at your ankles, and you’re not a bystander—you’re the main event. Firewood stacks taller than your head, and let’s be real: you probably won’t survive this." },
+    { "tag": "s1p1c", "line": "So, before you get comfortable, take a moment to like the video and subscribe—but only if you genuinely enjoy what I do here. Also, drop your location and local time in the comments—I love seeing where everyone’s watching from." },
+    { "tag": "s1p1d", "line": "Now, dim the lights, maybe turn on a fan for that soft background hum, and let’s ease into tonight’s journey together. Smoke curls. Boots crunch in gravel. You take a deep breath—and begin to remember." }
+  ]
+}
+🎤 NARRATION STYLE
+✓ Second-person present tense (“You walk...”)
+✓ Gentle, immersive, whispery tone with sensory detail
+✓ Mix sleepy storytelling with:
+– 1 historical fact per section
+– 1 quirky or fringe detail per section
+– 1 open scholarly debate per section
+✓ PG-13 only — no gore or explicit violence
+✓ Light humor, modern references, callbacks okay
+✓ Line length varies naturally, but blocks should average ~40–80 seconds of voiceover
+✓ Tags must update based on current section, paragraph block, and line index
+
+📸 IMAGE PROMPTS
+Each "img" must match its narration block in:
+– Setting, time period, clothing, architecture, atmosphere, and lighting
+– Written in Midjourney cinematic prompt style
+
+🌙 CLOSING
+At the end of the final section:
+– Add a 300-word sleepy wind-down
+– Close with:
+>>> End of script. Sweet dreams.
+🎬 BEGIN
+Internally generate outline for TOTAL_SECTIONS sections.
+Then immediately output Section1 in JSON format according to LINES_PER_IMAGE.
+Continue through Section{TOTAL_SECTIONS} with no pauses.
+After final section, include sleepy outro and end marker.
