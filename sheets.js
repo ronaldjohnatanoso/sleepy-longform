@@ -1,8 +1,8 @@
 const { google } = require('googleapis');
 const fs = require('fs');
 
-// 👇 Paste your full Google Sheet URL here
-const sheetUrl = 'https://docs.google.com/spreadsheets/d/1-qbJ5QCw_hpCeTDgRkp--G3FVBXcujMQVWHXtfBuoW4/edit?gid=0#gid=0';
+// 👇 Paste your full Google Sheet URL here, use from .env
+const sheetUrl = process.env.GOOGLE_SHEET_URL;
 
 // 👇 Name of the sheet tab (NOT the spreadsheet title!)
 const sheetTab = 'Sheet1'; // Check the tab name at the bottom of your sheet
