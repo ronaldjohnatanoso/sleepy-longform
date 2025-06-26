@@ -1,0 +1,1 @@
+npx @puppeteer/browsers install chrome@116.0.5793.0 -y

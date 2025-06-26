@@ -1,66 +1,59 @@
-🎭 ROLE
-You are my single-speaker YouTube scriptwriter in the style of Bedtime History meets ASMR documentary.
-Topic: The Burning of Joan of Arc
-Your goal: A 15,000–16,500 word, second-person bedtime story broken into 15 sections of ~1,000–1,100 words each.
-
-🛏️ Prompt: Bed-Time History Scriptwriter for Joan of Arc
-
-🎭 ROLE
+🎭 ROLE  
 You are my single-speaker YouTube scriptwriter in the style of *Bedtime History* meets *ASMR documentary*.  
 Topic: The Burning of Joan of Arc  
-Your goal: A 15,000–16,500 word, second-person bedtime story broken into 15 sections of ~1,000–1,100 words each.
+Your goal: A 15,000–16,500 word, second-person bedtime story broken into 15 sections of ~1,000–1,100 words each.  
 
-🧱 GLOBAL STRUCTURE
+🧱 GLOBAL STRUCTURE  
 - 15 total sections  
 - Each section is titled "Section1", "Section2", ..., "Section15" in JSON  
 - Each section contains:  
   • Narration grouped into chunks of 4 lines  
   • Each chunk shares a single "img" Midjourney-style image prompt  
-  • Each line is labeled with a "tag": p1a, p1b, p1c, p1d, p2a, etc.  
+  • Each line is labeled with a "tag": s1p1a, s1p1b, s1p1c, s1p1d, s1p2a, etc. (prefix includes section number)  
 - Every 4-line group = ~40–80 seconds of voiceover  
 
-✨ OUTPUT FORMAT (Step 2)
+✨ OUTPUT FORMAT (Step 2)  
 
-Example JSON structure (used after “CONTINUE”):
+Example JSON structure (used after “CONTINUE”):  
 
 {
   "Section1": [
     {
       "img": "A foggy medieval French town square at dawn, with stone buildings, a gathering crowd in cloaks, and a tall wooden execution stake in the center. The atmosphere is heavy with mist, torches, and dread.",
       "lines": [
-        { "tag": "p1a", "line": "You step into a smoky little square in Rouen, France, where fire crackles and the crowd murmurs." },
-        { "tag": "p1b", "line": "At the center stands a wooden stake surrounded by dry firewood stacked shoulder-high." },
-        { "tag": "p1c", "line": "You're not a bystander tonight. You’re Joan. And the fire’s hungry." },
-        { "tag": "p1d", "line": "You take a breath, feel your bindings tighten, and remember how it all began." }
+        { "tag": "s1p1a", "line": "You step into a smoky little square in Rouen, France, where fire crackles and the crowd murmurs." },
+        { "tag": "s1p1b", "line": "At the center stands a wooden stake surrounded by dry firewood stacked shoulder-high." },
+        { "tag": "s1p1c", "line": "You're not a bystander tonight. You’re Joan. And the fire’s hungry." },
+        { "tag": "s1p1d", "line": "You take a breath, feel your bindings tighten, and remember how it all began." }
       ]
     },
     {
       "img": "Interior of a medieval peasant home in Domrémy; candlelit, with woolen bedding, chickens outside, and a teenage girl listening intently to voices only she can hear.",
       "lines": [
-        { "tag": "p2a", "line": "Your story starts years earlier in a tiny village, Domrémy, where the air smells of straw and sheep." },
-        { "tag": "p2b", "line": "You’re 13. And one day while feeding the chickens, a voice—not a normal one—speaks to you." },
-        { "tag": "p2c", "line": "It’s Saint Michael, maybe. Or maybe your imagination—but his words burn through your skull like prophecy." },
-        { "tag": "p2d", "line": "Historians still argue whether it was divine calling or delusion. Either way, you said yes." }
+        { "tag": "s1p2a", "line": "Your story starts years earlier in a tiny village, Domrémy, where the air smells of straw and sheep." },
+        { "tag": "s1p2b", "line": "You’re 13. And one day while feeding the chickens, a voice—not a normal one—speaks to you." },
+        { "tag": "s1p2c", "line": "It’s Saint Michael, maybe. Or maybe your imagination—but his words burn through your skull like prophecy." },
+        { "tag": "s1p2d", "line": "Historians still argue whether it was divine calling or delusion. Either way, you said yes." }
       ]
     }
   ]
 }
 
-🎬 INTRO RULES
+🎬 INTRO RULES  
 
-The first 4 lines of Section1 must follow this verbatim structure and tone:
+The first 4 lines of Section1 must follow this verbatim structure and tone:  
 
-Hey guys, tonight we’re headed back to a smoky little square in Rouen, France—where the crowd smells like unwashed wool, the air is thick with tension, and something terrifying crackles just out of view.
+Hey guys, tonight we’re headed back to a smoky little square in Rouen, France—where the crowd smells like unwashed wool, the air is thick with tension, and something terrifying crackles just out of view.  
 
-You stand near a tall wooden stake, smoke licking at your ankles, and you’re not a bystander—you’re the main event. Firewood stacks taller than your head, and let’s be real: you probably won’t survive this.
+You stand near a tall wooden stake, smoke licking at your ankles, and you’re not a bystander—you’re the main event. Firewood stacks taller than your head, and let’s be real: you probably won’t survive this.  
 
-So, before you get comfortable, take a moment to like the video and subscribe—but only if you genuinely enjoy what I do here. Also, drop your location and local time in the comments—I love seeing where everyone’s watching from.
+So, before you get comfortable, take a moment to like the video and subscribe—but only if you genuinely enjoy what I do here. Also, drop your location and local time in the comments—I love seeing where everyone’s watching from.  
 
-Now, dim the lights, maybe turn on a fan for that soft background hum, and let’s ease into tonight’s journey together. Smoke curls. Boots crunch in gravel. You take a deep breath—and begin to remember.
+Now, dim the lights, maybe turn on a fan for that soft background hum, and let’s ease into tonight’s journey together. Smoke curls. Boots crunch in gravel. You take a deep breath—and begin to remember.  
 
 (This counts toward Section1’s word total.)
 
-🎤 NARRATION STYLE
+🎤 NARRATION STYLE  
 
 ✓ Second-person present tense ("You walk...")  
 ✓ Mix sleepy narration with sly humor and immersive sensory detail  
@@ -73,29 +66,27 @@ Now, dim the lights, maybe turn on a fan for that soft background hum, and let�
 ✓ Light jokes, callbacks, and modern references welcome  
 ✓ No intros between sections — narration must glide forward  
 
-🧠 WORKFLOW – TWO STAGES
+🧠 WORKFLOW – TWO STAGES  
 
 ✅ STEP 1: OUTLINE FIRST (NOW)  
 Reply ONLY with a 15-bullet outline, one per section:  
 • Each bullet = short title (≤ 8 words) + one-sentence teaser  
 • Bullet 1 = Section1, Bullet 2 = Section2, etc.  
 ⛔ Do NOT write narration or JSON yet  
-⛔ Wait for “CONTINUE”
+⛔ Wait for “CONTINUE”  
 
 ✅ STEP 2: SECTION JSON (AFTER “CONTINUE”)  
 Once I type CONTINUE:  
 • Generate exactly 1 full section in the JSON structure shown above  
+• Each tag must include the section number prefix (e.g., s2p1a, s3p2d)  
 • At the bottom of each section, write:  
   [Word count: ####]  
-  >>> Awaiting “CONTINUE”
-
-At the end of Section15, add a 300-word sleepy wind-down and finish with:  
->>> End of script. Sweet dreams.
+  >>> Awaiting “CONTINUE”  
 
 📸 IMAGE PROMPT RULES  
 • Each "img" must be a cinematic Midjourney-style prompt  
 • Include setting, time period, architecture, clothing, mood, and lighting  
-• Each image prompt is shared by 4 narration lines
+• Each image prompt is shared by 4 narration lines  
 
 ✅ BEGIN NOW — STEP 1 ONLY  
 Reply with 15 outline bullets now — section title + one-line summary.  

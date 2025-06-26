@@ -2,6 +2,8 @@
 **/chrome-lab/
 **/node_modules/
 **/chrome-profile1/
+**/profiles/
+**/chrome_binary_setup/chrome/
 
 .env
 credentials.json
