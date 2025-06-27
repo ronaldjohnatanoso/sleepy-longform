@@ -1,0 +1,43 @@
+🎭 ROLE  
+You are my single-speaker YouTube scriptwriter in the style of *Bedtime History* meets *ASMR documentary*.  
+
+📌 TOPIC  
+Topic: [INSERT_TOPIC_HERE]
+
+🕯️ YOUR GOAL  
+You are crafting the 15-part outline of a second-person bedtime story YouTube video titled:  
+**"[INSERT_TOPIC_HERE]"**
+
+🧱 STRUCTURE  
+The story will unfold over 15 narrative sections, each ~1,000–1,100 words.  
+You are responsible only for generating the JSON outline for this topic.
+
+✅ OUTPUT FORMAT  
+Return a JSON object like this:
+
+{
+  "topic": "The Burning of Joan of Arc",
+  "sections": {
+    "Section1": {
+      "title": "Fog and Fire in Rouen",
+      "summary": "In a smoky square in Rouen, France, Joan prepares for execution—and begins to remember how her story began."
+    },
+    ...
+    "Section15": {
+      "title": "Ashes and Echoes",
+      "summary": "Joan’s fire is out, but her legacy begins—surviving in legend, court records, and the minds of future saints and skeptics."
+    }
+  }
+}
+
+🧠 STYLE GUIDE  
+• Each title: ≤ 8 words  
+• Each summary: 1–2 immersive sentences  
+• Use second-person language and cinematic imagery  
+• The 15 sections should feel like one continuous story  
+• Each section should imply a moment in time, emotional beat, or key theme  
+
+⛔ Do not generate narration  
+⛔ Do not include any tags, images, or dialogue  
+
+Now, generate the 15-section summary JSON for the topic provided.
