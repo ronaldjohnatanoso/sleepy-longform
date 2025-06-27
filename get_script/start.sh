@@ -2,11 +2,11 @@
 
 # Default values
 PROFILES_DIR="../profiles"
-USER_DATA_DIR="scytherkalachuchi" # Default profile name
+USER_DATA_DIR=${1}
 USER_DATA_DIR="$PROFILES_DIR/$USER_DATA_DIR" # Use first argument, fallback to env var
-DEBUG_PORT=9222 # Use second argument, fallback to env var
-HEADLESS="false" # Use third argument, default to false
-BINARY_PATH="./chrome_binary_setup/chrome/linux-116.0.5793.0/chrome-linux64/chrome"
+DEBUG_PORT="${2}" # Use second argument, fallback to env var
+HEADLESS="${3:-false}" # Use third argument, default to false
+BINARY_PATH="../chrome_binary_setup/chrome/linux-116.0.5793.0/chrome-linux64/chrome"
 
 # Create the user data dir if it doesn't exist
 mkdir -p "$USER_DATA_DIR"
@@ -51,24 +51,22 @@ CHROME_ARGS=(
   --disable-background-timer-throttling
   --disable-backgrounding-occluded-windows
   --disable-renderer-backgrounding
-  --no-sandbox
   --disable-dev-shm-usage
-  --disable-gpu-sandbox
-  --use-angle=swiftshader-webgl
-  --use-gl=angle
   --enable-webgl
   --enable-accelerated-2d-canvas
   --ignore-gpu-blacklist
-  --disable-web-security
   --disable-features=VizDisplayCompositor
+  --enable-accelerated-video-decode
+  --enable-accelerated-video-encode
+  --enable-gpu-rasterization
+  --enable-zero-copy
 )
 
 # Add headless-specific flags
 if [ "$HEADLESS" = "true" ]; then
   CHROME_ARGS+=(
     --headless=new
-    --virtual-time-budget=5000
-    --disable-gpu
+    --disable-process-singleton-dialog
   )
   echo "Starting Chrome in headless mode..."
 else

@@ -1,1 +1,3 @@
 proper structure the script txt
+
+move the profile project folder 

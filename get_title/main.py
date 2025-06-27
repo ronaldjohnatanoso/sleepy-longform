@@ -10,6 +10,8 @@ import time
 
 load_dotenv()  # Load environment variables from .env file one level up
 
+CWD  = os.path.dirname(os.path.abspath(__file__))  # Current working directory
+
 # 👇 Get Google Sheet URL from environment variable
 sheet_url = os.getenv('GOOGLE_SHEET_URL')
 sheet_tab = 'TITLES'
@@ -28,6 +30,65 @@ def extract_sheet_id(url):
     match = re.search(r'/d/([a-zA-Z0-9-_]+)', url)
     return match.group(1) if match else None
 
+def sanitize_folder_name(title):
+    """Convert title to safe folder name"""
+    # Remove or replace invalid characters for folder names
+    sanitized = re.sub(r'[<>:"/\\|?*]', '', title)  # Remove invalid chars
+    sanitized = re.sub(r'\s+', '_', sanitized.strip())  # Replace spaces with underscores
+    sanitized = sanitized[:40]  # Shorter limit
+    return sanitized
+
+def get_next_project_number():
+    """Get the next sequential project number"""
+    projects_dir = os.path.join(CWD, "projects")
+    
+    # Create projects directory if it doesn't exist
+    if not os.path.exists(projects_dir):
+        os.makedirs(projects_dir)
+        return 1
+    
+    # Find existing project folders and extract numbers
+    existing_numbers = []
+    for folder in os.listdir(projects_dir):
+        if os.path.isdir(os.path.join(projects_dir, folder)):
+            # Extract number from folder name (format: a1_, a2_, etc.)
+            match = re.match(r'a(\d+)_', folder)
+            if match:
+                existing_numbers.append(int(match.group(1)))
+    
+    # Return next number (or 1 if no projects exist)
+    return max(existing_numbers) + 1 if existing_numbers else 1
+
+def create_project_folder(title):
+    """Create project folder with simple sequential numbering"""
+    # Get next project number
+    project_num = get_next_project_number()
+    
+    # Sanitize the title for folder name
+    safe_title = sanitize_folder_name(title)
+    
+    # Create folder name: a1_title, a2_title, etc.
+    folder_name = f"a{project_num}_{safe_title}"
+    
+    # Create full path
+    projects_dir = os.path.join(CWD, "../projects")
+    project_path = os.path.join(projects_dir, folder_name)
+    
+    # Create the directory
+    os.makedirs(project_path, exist_ok=True)
+    
+    print(f"📁 Created project folder: {folder_name}")
+    print(f"📍 Full path: {project_path}")
+    
+    # go inside that folder and create a json file named title.json, and the content is the title
+    title_file_path = os.path.join(project_path, f"title.json")
+    with open(title_file_path, 'w') as title_file:
+        title_file.write(f'{{"title": "{title}"}}')
+        
+    print(f"📝 Created title file: {title_file_path}")
+    
+    return project_path, f"a{project_num}"
+
 def get_title_from_google_sheets():
     """Fetch the first available title from Google Sheets with simple retry"""
     max_retries = 20
@@ -39,8 +100,13 @@ def get_title_from_google_sheets():
         
         title = try_get_title()
         if title:
-            return title
-    
+            # create the project folder with the title
+            project_path, project_code = create_project_folder(title)
+
+            # it should return the title as well as the code by parsing the title
+            print(f'✅ Successfully got title: "{title}"')
+            return title, project_code
+
     print('❌ Failed to get title after retries')
     return None
 

@@ -2,6 +2,8 @@
 
 Run chrome_binary_dl.sh inside chrome_binary_setup folder to setup the browser binary to use
 
+## Put a credentials.json from google sheets api service
+
 ## Google Sheets
 
 Name a sheet 'Google Accounts'

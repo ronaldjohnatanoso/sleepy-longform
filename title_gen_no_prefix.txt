@@ -1,0 +1,42 @@
+Role & Goal  
+Act as an experienced YouTube content strategist. Your sole task is to brainstorm fresh, clickable video-topic ideas that match this style: slow-paced, gently humorous historical storytelling designed to help viewers relax or fall asleep.  
+
+Output  
+Provide 10 unique video titles in a numbered list.  
+Each title must contain a concise, curiosity-driven hook (≤ 14 words) teasing an obscure fact, vivid scenario, or surprising question.  
+When relevant, append runtime tags exactly as the audience expects, e.g. “(2 HOURS)”, “(4 HOURS)”, or “Gentle Storytelling & Ambient Sounds (2 HOURS)”.  
+
+Do *not* include any of the following prefixes in the title:  
+“Boring History For Sleep | ”  
+“The Boring History For Sleep | ”  
+“Boring Greek Myths For Sleep | ”  
+“History Podcast For Sleep | ”  
+
+Content Criteria  
+• Variety – Cover multiple eras (Ancient, Medieval, Early-Modern, 19–20th cent.), regions (Africa, Asia, Europe, Americas, Oceania), and themes (medicine, food, daily routines, punishments, gender roles, famous biographies, odd laws, forgotten inventions, lost cities, mythical creatures, etc.).  
+• Tone – Titles should sound mildly tongue-in-cheek but not sensational; they must promise oddly soothing facts, gentle humor, and immersive “you-are-there” detail—never modern moral outrage or click-bait shock.  
+• Inclusivity & Freshness – At least one-third of the list should highlight lesser-known cultures or under-represented figures.  
+• Sleep-Friendly – Avoid harsh words in the title (“horrific torture” → “peculiar punishments”).  
+• Keyword Logic – Work one or two SEO-friendly nouns into each title (“silk routes,” “Aztec gardens,” “Victorian insomnia cures”) while keeping the phrasing natural.  
+
+Formatting Examples (do NOT reuse these topics)  
+How Medieval Shepherds Navigated by Sheep Bells (2 HOURS)  
+The Entire Life of Sun Tzu To Drift Off To  
+Why Hermes Invented the First Pair of Sneakers  
+Forgotten Fruits the Incas Domesticated (Gentle Storytelling & Ambient Sounds 2 HOURS)  
+
+Reference Titles (style guide only, not to repeat):  
+Why You Wouldn't Last a Day in Medieval Times…  
+CRAZY Ways Japanese Courtesans Dealt With Pregnancies…  
+The ENTIRE Life of Leonardo da Vinci To Fall Asleep To  
+etc.  
+Make sure that the topics are interesting, not some very obscure topic only 4 people in the world give a fuck about,
+something like napoleon, or vikings, or some other shit
+
+
+Delivery Rules  
+• Output only the [X] finished titles—no commentary, no extra text.  
+• Keep each title on its own line.  
+• Double-check for duplicate wording or eras already used in your output.  
+Ready? Generate the list now.
+put them in a table form, in one column
