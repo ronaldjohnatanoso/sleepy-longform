@@ -18,3 +18,5 @@ It runs a profile worker
 this profile worker accepts a function that will
 define how it navigates and works on a page
 get_outline is for navigating chatgpt
+you should get a outline.json
+use this to dispatch the workers and get individual sections

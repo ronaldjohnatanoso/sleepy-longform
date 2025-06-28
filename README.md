@@ -19,3 +19,7 @@ Name a sheet 'Google Accounts'
 - There should also be an option for a custom on the spot title in the creation that doesn't use this
 
 ## Load an Available Title or Pick your own
+
+## SOME TROUBLE SHOOTING
+
+when you change profile make sure the clipboard is enabled and port does collide

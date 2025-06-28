@@ -2,7 +2,9 @@
 
 
 def get_outline(page, title=None, code=None):  # Removed async
-    """Navigate to ChatGPT website using the provided page object"""
+    """Navigate to ChatGPT website using the provided page object
+        returns True if successful, False otherwise.
+    """
     
     if title is None:
         raise ValueError("Title must be provided")
@@ -37,8 +39,8 @@ def get_outline(page, title=None, code=None):  # Removed async
         # Wait for ChatGPT to finish generating by waiting for UI indicators
         print("Waiting for ChatGPT to finish generating...")
         try:
-            # Wait for stop button to appear first (generation started)
-            page.wait_for_selector("[data-testid='stop-button']", timeout=10000)
+            # Wait for send button to appear first (generation started)
+            page.wait_for_selector("[data-testid='send-button'] > svg", timeout=30000)
             print("Generation started, waiting for completion...")
             # Then wait for it to disappear (generation finished)
             page.wait_for_selector("[data-testid='stop-button']", state="hidden", timeout=120000)
@@ -60,19 +62,51 @@ def get_outline(page, title=None, code=None):  # Removed async
         project_path = os.path.join(project_folder, project_folders[0])
         print(f"Project folder found: {project_path}")        
 
-        # do a screenshot of the page
-        screenshot_path = os.path.join(project_path, "chatgpt_screenshot.png")
-        print(f"Taking screenshot and saving to {screenshot_path}")
-        page.screenshot(path=screenshot_path, full_page=True)  # Removed await
+
         print("clickin the copy")
         page.click("button:has-text('Copy')")  # Removed await
     
+        # do a screen capture of the page
+        screenshot_path = os.path.join(project_path, "chatgpt_screenshot.png")
+        page.screenshot(path=screenshot_path, full_page=True)  # Removed await
+        print(f"Screenshot saved to: {screenshot_path}")
+    
         # whatever is in the clipboard, we store it in a string var
-        clipboard_content = page.evaluate("navigator.clipboard.readText()")  # Removed await
+        clipboard_content = page.evaluate("() => navigator.clipboard.readText()")  # Removed await
         print(f"Clipboard content: {clipboard_content}")
     
-        return True
+    
+        # Clean up the clipboard content by replacing non-breaking spaces with regular spaces
+        cleaned_content = clipboard_content.replace('\xa0', ' ')
+        
+        # parse the clipboard content as JSON
+        try:
+            import json
+            outline_data = json.loads(cleaned_content)  # Use cleaned content instead
+            
+            # Save the JSON to the project folder
+            json_file_path = os.path.join(project_path, "outline.json")
+            with open(json_file_path, 'w', encoding='utf-8') as json_file:
+                json.dump(outline_data, json_file, indent=2, ensure_ascii=False)
+            print(f"Outline saved to: {json_file_path}")
+            
+            # Add explicit success message here
+            print("get_outline function completed successfully, returning True")
+            return True
+        
+        except json.JSONDecodeError as e:
+            print(f"Error parsing clipboard content as JSON: {e}")
+            print(f"Raw clipboard content type: {type(clipboard_content)}")
+            print(f"Raw clipboard content: {repr(clipboard_content)}")
+            # Save as raw text if JSON parsing fails
+            txt_file_path = os.path.join(project_path, "outline_raw.txt")
+            with open(txt_file_path, 'w', encoding='utf-8') as txt_file:
+                txt_file.write(str(clipboard_content))
+            print(f"Raw content saved to: {txt_file_path}")
+            print("get_outline function completed with JSON error, returning True anyway")
+            return True
 
     except Exception as e:
         print(f"Error navigating to ChatGPT: {e}")
+        print(f"get_outline function failed with exception, returning False")
         return False
