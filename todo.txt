@@ -1,3 +1,7 @@
 proper structure the script txt
 
 move the profile project folder 
+
+define get outline chatgpt code
+
+access every profile and manaully allow clipboard

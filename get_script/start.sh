@@ -1,12 +1,15 @@
 #!/bin/bash
 
-# Default values
-PROFILES_DIR="../profiles"
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Default values - now relative to script location
+PROFILES_DIR="$SCRIPT_DIR/../profiles"
 USER_DATA_DIR=${1}
 USER_DATA_DIR="$PROFILES_DIR/$USER_DATA_DIR" # Use first argument, fallback to env var
 DEBUG_PORT="${2}" # Use second argument, fallback to env var
 HEADLESS="${3:-false}" # Use third argument, default to false
-BINARY_PATH="../chrome_binary_setup/chrome/linux-116.0.5793.0/chrome-linux64/chrome"
+BINARY_PATH="$SCRIPT_DIR/../chrome_binary_setup/chrome/linux-116.0.5793.0/chrome-linux64/chrome"
 
 # Create the user data dir if it doesn't exist
 mkdir -p "$USER_DATA_DIR"
@@ -74,4 +77,4 @@ else
 fi
 
 # Start Chrome with the configured arguments
-exec $BINARY_PATH "${CHROME_ARGS[@]}"
+exec "$BINARY_PATH" "${CHROME_ARGS[@]}"

@@ -19,7 +19,8 @@ def gen_script(title, code):
     """Generate the script with the given title
     .We just call import the function since its a serial part
     """
-    from get_script.main import gen_script
+    from get_script.main import main as gen_script_main
+    gen_script_main(title=title, code=code)
 
 def main():
     parser = argparse.ArgumentParser(description="Orchestrator for the main pipeline.")
@@ -40,10 +41,9 @@ def main():
     print(f"📝 Using title: {title}")
     print(f"📝 Using code: {code}")
 
-    exit(1)
 
-    # pass the title to the script gen
-    gen_script(title)
+    # pass the title and code to the script gen
+    gen_script(title, code)
 
 if __name__ == "__main__":
     main()

@@ -15,7 +15,7 @@ from playwright.sync_api import sync_playwright  # Changed from async_playwright
 load_dotenv()
 IS_HEADLESS = False
 
-def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None):  # Removed async
+def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None, title=None, code=None):  # Removed async
     """
     open the browser with debug port and user data directory
     
@@ -65,7 +65,7 @@ def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None):  #
                 page = context.new_page()  # Removed await
             
             # Once we have the page, we pass it to another module that does the actual work
-            page_worker_func(page)  # Removed await
+            page_worker_func(page, title=title, code=code) 
 
         # Terminate the Chrome process
         # process.terminate()
@@ -76,7 +76,7 @@ def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None):  #
         print(f"Error: {e}")
         return False
 
-def main():
+def main(title="ketchup sucks", code="aid"):
     """
     Main function to start the Chrome browser with the specified user data directory and debug port.
     """
@@ -85,32 +85,25 @@ def main():
     # i'll just hardcode the port and user data dir for now since its serial part,
     # but you can change it later whatever is avaiable profile
     # TODO: make it detect avaialble profile, throw error if none and instruct user to create one
+    
+    # Add the current directory to Python path to ensure imports work
+    import sys
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    if current_dir not in sys.path:
+        sys.path.insert(0, current_dir)
+    
     from get_outline import get_outline
+    
     with ThreadPoolExecutor(max_workers=15) as executor:
-        future1 = executor.submit(profile_worker, debug_port=9222, user_data_dir="scytherkalachuchi", page_worker_func=get_outline)
+        future1 = executor.submit(profile_worker, debug_port=9222, user_data_dir="scytherkalachuchia", page_worker_func=get_outline, title=title, code=code)
 
         # Wait for completion
         result1 = future1.result()
         print(f"Worker completed with result: {result1}")    
 
-    # we need one worker to generate the outline script
-    result = profile_worker(debug_port=debug_port, user_data_dir=user_data_dir)
-    
-    if result:
-        print("Profile worker completed successfully.")
-    else:
-        print("Profile worker failed.")
 
 # Example usage
 if __name__ == "__main__":
-    from get_outline import get_outline
-    
-    # Now this works with ThreadPoolExecutor
-    with ThreadPoolExecutor(max_workers=15) as executor:
-        future1 = executor.submit(profile_worker, debug_port=9222, user_data_dir="scytherkalachuchi", page_worker_func=get_outline)
-
-        # Wait for completion
-        result1 = future1.result()
-        print(f"Worker completed with result: {result1}")
+    main()
 
 

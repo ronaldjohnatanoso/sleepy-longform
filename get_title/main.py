@@ -10,7 +10,7 @@ import time
 
 load_dotenv()  # Load environment variables from .env file one level up
 
-CWD  = os.path.dirname(os.path.abspath(__file__))  # Current working directory
+this_script_path  = os.path.dirname(os.path.abspath(__file__))  # Current working directory
 
 # 👇 Get Google Sheet URL from environment variable
 sheet_url = os.getenv('GOOGLE_SHEET_URL')
@@ -40,7 +40,7 @@ def sanitize_folder_name(title):
 
 def get_next_project_number():
     """Get the next sequential project number"""
-    projects_dir = os.path.join(CWD, "projects")
+    projects_dir = os.path.join(this_script_path, "..", "projects")
     
     # Create projects directory if it doesn't exist
     if not os.path.exists(projects_dir):
@@ -71,7 +71,7 @@ def create_project_folder(title):
     folder_name = f"a{project_num}_{safe_title}"
     
     # Create full path
-    projects_dir = os.path.join(CWD, "../projects")
+    projects_dir = os.path.join(this_script_path, "../projects")
     project_path = os.path.join(projects_dir, folder_name)
     
     # Create the directory

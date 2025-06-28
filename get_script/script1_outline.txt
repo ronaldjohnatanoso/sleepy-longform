@@ -13,8 +13,7 @@ The story will unfold over 15 narrative sections, each ~1,000–1,100 words.
 You are responsible only for generating the JSON outline for this topic.
 
 ✅ OUTPUT FORMAT  
-Return a JSON object like this:
-
+Return a JSON object like this: 
 {
   "topic": "The Burning of Joan of Arc",
   "sections": {
@@ -29,6 +28,7 @@ Return a JSON object like this:
     }
   }
 }
+write that in a code block
 
 🧠 STYLE GUIDE  
 • Each title: ≤ 8 words  
