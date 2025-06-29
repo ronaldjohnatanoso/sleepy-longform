@@ -39,6 +39,8 @@ def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None, tit
     process = None
     result = False
     
+      # Ensure process is initialized before using it
+    
     try:
         # Make sure start.sh is executable
         subprocess.run(["chmod", "+x", start_sh_path], check=True)
@@ -58,8 +60,13 @@ def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None, tit
             contexts = browser.contexts
             if contexts:
                 context = contexts[0]
+                # Grant permissions to existing context
+                context.grant_permissions(['clipboard-read', 'clipboard-write'], origin='https://chatgpt.com')
             else:
-                context = browser.new_context()
+                # Create new context with permissions already granted
+                context = browser.new_context(
+                    permissions=['clipboard-read', 'clipboard-write']
+                )
             
             pages = context.pages
             if pages:
@@ -90,23 +97,6 @@ def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None, tit
                 # If it doesn't shut down gracefully, force kill
                 process.kill()
                 process.wait()
-                
-                # Clean up singleton files manually if force killed
-                profiles_dir = os.path.join(script_dir, "..", "profiles")
-                user_data_path = os.path.join(profiles_dir, user_data_dir)
-                singleton_files = [
-                    os.path.join(user_data_path, "SingletonLock"),
-                    os.path.join(user_data_path, "SingletonSocket"),
-                    os.path.join(user_data_path, "SingletonCookie")
-                ]
-                for singleton_file in singleton_files:
-                    try:
-                        os.remove(singleton_file)
-                        print(f"Cleaned up {singleton_file}")
-                    except FileNotFoundError:
-                        pass
-                    except Exception as e:
-                        print(f"Failed to clean up {singleton_file}: {e}")
             except Exception as cleanup_error:
                 print(f"Error during cleanup: {cleanup_error}")
                 # Force kill as last resort
@@ -115,6 +105,24 @@ def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None, tit
                     process.wait()
                 except:
                     pass
+        
+        # Always clean up singleton files after Chrome process is terminated
+        # This should happen regardless of graceful or force shutdown
+        profiles_dir = os.path.join(script_dir, "..", "profiles")
+        user_data_path = os.path.join(profiles_dir, user_data_dir)
+        singleton_files = [
+            os.path.join(user_data_path, "SingletonLock"),
+            os.path.join(user_data_path, "SingletonSocket"),
+            os.path.join(user_data_path, "SingletonCookie")
+        ]
+        for singleton_file in singleton_files:
+            try:
+                os.remove(singleton_file)
+                print(f"Cleaned up {singleton_file}")
+            except FileNotFoundError:
+                pass  # File doesn't exist, which is fine
+            except Exception as e:
+                print(f"Failed to clean up {singleton_file}: {e}")
     
     return result
 
@@ -140,7 +148,7 @@ def main(title="ketchup sucks", code="aid"):
                 print(f"Attempt {attempt + 1} of {max_attempts}")
                 future1 = executor.submit(profile_worker, 
                                         debug_port=9223, 
-                                        user_data_dir="scytherkalachuchib", 
+                                        user_data_dir="scytherkalachuchig", 
                                         page_worker_func=get_outline, 
                                         title=title, 
                                         code=code)

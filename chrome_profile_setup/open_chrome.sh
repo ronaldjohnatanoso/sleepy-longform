@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # PUT THE GMAIL ACCOUNT USERNAME HERE WITHOUT @GMAIL.COM
-GMAIL_USERNAME="scytherkalachuchif"
+GMAIL_USERNAME="scytherkalachuchig"
 
 # Set a user data directory relative to current working directory
 USER_DATA_DIR="../profiles/$GMAIL_USERNAME"
-DEBUG_PORT=9222
+DEBUG_PORT=9223
 BINARY_PATH="../chrome_binary_setup/chrome/linux-116.0.5793.0/chrome-linux64/chrome"
 
 

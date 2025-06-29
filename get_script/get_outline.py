@@ -33,8 +33,15 @@ def get_outline(page, title=None, code=None):  # Removed async
         print("typing the outline and title into the chat input")
         page.fill("p", outline + "\n" + title)
 
-        print("submitting the outline and title")
-        page.keyboard.press("Enter")  # Removed await
+        # pause the page indefinitely
+        # page.pause()  # Removed await, this is not needed in sync mode
+
+        # print("submitting the outline and title")
+        # page.keyboard.press("Enter")  # Removed await
+        
+        # click button with selector [data-testid='send-button'] > svg
+        print("clicking the send button")
+        page.click("[data-testid='send-button'] > svg")  # Removed await
 
         # Wait for ChatGPT to finish generating by waiting for UI indicators
         print("Waiting for ChatGPT to finish generating...")
