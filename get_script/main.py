@@ -14,7 +14,7 @@ import sys
 
 
 load_dotenv()
-IS_HEADLESS = True
+IS_HEADLESS = False
 
 def profile_worker(debug_port=None, user_data_dir="", page_worker_func=None, title=None, code=None):
     """
