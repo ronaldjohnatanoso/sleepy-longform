@@ -39,6 +39,7 @@ fi
 
 # Build Chrome command with base arguments
 CHROME_ARGS=(
+  --headless=new 
   --remote-debugging-port=$DEBUG_PORT
   --user-data-dir="$USER_DATA_DIR"
   --no-first-run
