@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PUT THE GMAIL ACCOUNT USERNAME HERE WITHOUT @GMAIL.COM
-GMAIL_USERNAME="scytherkalachuchig"
+GMAIL_USERNAME="scytherkalachuchii"
 
 # Set a user data directory relative to current working directory
 USER_DATA_DIR="../profiles/$GMAIL_USERNAME"
