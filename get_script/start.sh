@@ -5,8 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Default values - now relative to script location
 PROFILES_DIR="$SCRIPT_DIR/../profiles"
-USER_DATA_DIR=${1}
-USER_DATA_DIR="$PROFILES_DIR/$USER_DATA_DIR" # Use first argument, fallback to env var
+PROFILE_NAME=${1}
+USER_DATA_DIR="$PROFILES_DIR/$PROFILE_NAME" # Use first argument, fallback to env var
 DEBUG_PORT="${2}" # Use second argument, fallback to env var
 HEADLESS="${3:-false}" # Use third argument, default to false
 BINARY_PATH="$SCRIPT_DIR/../chrome_binary_setup/chrome/linux-116.0.5793.0/chrome-linux64/chrome"
@@ -63,6 +63,9 @@ CHROME_ARGS=(
   --enable-accelerated-video-encode
   --enable-gpu-rasterization
   --enable-zero-copy
+  --disable-logging
+  --log-level=3
+  --silent
 )
 
 # Add headless-specific flags
@@ -71,10 +74,10 @@ if [ "$HEADLESS" = "true" ]; then
     --headless=new
     --disable-process-singleton-dialog
   )
-  echo "Starting Chrome in headless mode..."
+  echo "Starting Chrome in headless mode... Port: $DEBUG_PORT, Profile: $PROFILE_NAME"
 else
-  echo "Starting Chrome with GUI..."
+  echo "Starting Chrome with GUI... Port: $DEBUG_PORT, Profile: $PROFILE_NAME"
 fi
 
-# Start Chrome with the configured arguments
-exec "$BINARY_PATH" "${CHROME_ARGS[@]}"
+# Start Chrome with the configured arguments and suppress all output
+exec "$BINARY_PATH" "${CHROME_ARGS[@]}" >/dev/null 2>&1

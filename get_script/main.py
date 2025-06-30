@@ -228,6 +228,67 @@ def worker_task(section_number, profile_name, debug_port, page_worker_func, proj
         update_section_status(section_status_file, section_number, worker_name=profile_name)
         return {"section_number": section_number, "success": False, "worker": profile_name, "error": error_msg}
 
+def check_section_status(project_path, total_sections):
+    """
+    Check the status of sections in the project
+    
+    Returns:
+        tuple: (all_done, existing_status, pending_sections)
+        - all_done: bool, True if all sections are done
+        - existing_status: list, existing section status data or None
+        - pending_sections: list, sections that still need to be processed
+    """
+    section_status_file = os.path.join(project_path, "section_status.json")
+    
+    if not os.path.exists(section_status_file):
+        # No existing status file
+        return False, None, list(range(1, total_sections + 1))
+    
+    try:
+        with open(section_status_file, 'r', encoding='utf-8') as f:
+            existing_status = json.load(f)
+        
+        # Check if we have the right number of sections
+        if len(existing_status) != total_sections:
+            print(f"Warning: Existing status has {len(existing_status)} sections, but expected {total_sections}")
+            # If the numbers don't match, we'll need to handle this case
+            # For now, let's create missing sections
+            existing_section_numbers = {s['section_number'] for s in existing_status}
+            for i in range(1, total_sections + 1):
+                if i not in existing_section_numbers:
+                    existing_status.append({
+                        "section_number": i,
+                        "failures_num": 0,
+                        "status": "pending",
+                        "worker_name": None
+                    })
+            
+            # Sort by section number
+            existing_status.sort(key=lambda x: x['section_number'])
+        
+        # Check completion status
+        done_sections = [s for s in existing_status if s['status'] == 'done']
+        pending_sections = [s['section_number'] for s in existing_status 
+                          if s['status'] in ['pending', 'failed']]
+        in_progress_sections = [s['section_number'] for s in existing_status 
+                              if s['status'] == 'in_progress']
+        
+        # Treat in_progress as pending (they might have been interrupted)
+        pending_sections.extend(in_progress_sections)
+        
+        all_done = len(done_sections) == total_sections
+        
+        print(f"Existing status: {len(done_sections)}/{total_sections} sections done")
+        if pending_sections:
+            print(f"Pending sections: {sorted(pending_sections)}")
+        
+        return all_done, existing_status, pending_sections
+        
+    except Exception as e:
+        print(f"Error reading existing section status: {e}")
+        print("Will create new status file")
+        return False, None, list(range(1, total_sections + 1))
+
 def parallel_sections(page_worker_func, sections, title=None, code=None):
     """    Run workers in parallel for each section.
     Args:
@@ -237,17 +298,6 @@ def parallel_sections(page_worker_func, sections, title=None, code=None):
         code (str, optional): prefix code for easier identification of the project folder.
     """
     
-    # lets make a list of section dict, where an element is section_number, failures_num, status, and worker_name, start with 1
-    section_status = []
-    for i in range(1, sections + 1):
-        section_status.append({
-            "section_number": i,
-            "failures_num": 0,
-            "status": "pending",
-            "worker_name": None
-        })
-        
-    # make that into a json inside the project folder
     # get the current directory
     current_dir = os.path.dirname(os.path.abspath(__file__))
     # go up one level and find the project folder
@@ -260,11 +310,44 @@ def parallel_sections(page_worker_func, sections, title=None, code=None):
         raise FileNotFoundError(f"No project folder found starting with code '{code}'.")
     project_path = os.path.join(project_folder, project_folders[0])
     print(f"Project folder found: {project_path}")
-    # create a json file with the section status
+    
+    # Check existing section status
+    all_done, existing_status, pending_sections = check_section_status(project_path, sections)
+    
+    if all_done:
+        print("✓ All sections are already completed! Skipping parallel processing.")
+        return
+    
+    if not pending_sections:
+        print("✓ No pending sections found! All work is complete.")
+        return
+    
+    print(f"Processing {len(pending_sections)} pending sections...")
+    
+    # Use existing status or create new one
+    if existing_status:
+        section_status = existing_status
+        # Reset any in_progress sections to pending
+        for section in section_status:
+            if section['status'] == 'in_progress':
+                section['status'] = 'pending'
+                section['worker_name'] = None
+    else:
+        # Create new section status
+        section_status = []
+        for i in range(1, sections + 1):
+            section_status.append({
+                "section_number": i,
+                "failures_num": 0,
+                "status": "pending",
+                "worker_name": None
+            })
+    
+    # Save/update the section status file
     section_status_file = os.path.join(project_path, "section_status.json")
     with open(section_status_file, 'w', encoding='utf-8') as f:
         json.dump(section_status, f, indent=2, ensure_ascii=False)
-    print(f"Section status file created: {section_status_file}")
+    print(f"Section status file updated: {section_status_file}")
 
     # look inside the profiles folder, count the number of profiles
     # make a list where each element is a profile name
@@ -283,8 +366,7 @@ def parallel_sections(page_worker_func, sections, title=None, code=None):
         exit(1)
     print("profile names", profile_names)
 
-    # Create a queue of sections to process
-    pending_sections = list(range(1, sections + 1))
+    # Only process pending sections
     max_failures = 3
     
     # Use ProcessPoolExecutor to run workers in parallel
@@ -293,7 +375,7 @@ def parallel_sections(page_worker_func, sections, title=None, code=None):
         future_to_section = {}
         completed_sections = set()
         
-        # Submit initial batch of work
+        # Submit initial batch of work - only pending sections
         worker_index = 0
         while pending_sections and len(future_to_section) < num_workers:
             section_number = pending_sections.pop(0)
@@ -392,7 +474,14 @@ def parallel_sections(page_worker_func, sections, title=None, code=None):
                 # Break from the for loop to check if there are more futures
                 break
     
-    print(f"All sections processed. Completed: {len(completed_sections)}/{sections}")
+    # Calculate final statistics
+    with open(section_status_file, 'r', encoding='utf-8') as f:
+        final_status = json.load(f)
+    
+    done_count = len([s for s in final_status if s['status'] == 'done'])
+    failed_count = len([s for s in final_status if s['status'] == 'failed'])
+    
+    print(f"Processing complete: {done_count}/{sections} sections done, {failed_count} failed")
 
 def main(title="", code=""):
     """
@@ -413,8 +502,9 @@ def main(title="", code=""):
         raise FileNotFoundError(f"No project folder found starting with code '{code}'.")
     project_path = os.path.join(project_folder, project_folders[0])     
     outline_file_path = os.path.join(project_path, "outline.json")
+    
     if not os.path.exists(outline_file_path):
-        
+        print("No outline.json found, generating outline...")
         from get_outline import get_outline
         
         # Simple retry logic with ThreadPoolExecutor
@@ -437,16 +527,17 @@ def main(title="", code=""):
                     print(f"DEBUG: result1 = {result1}, type = {type(result1)}")
                     
                     if result1:
-                        print(f"Worker completed successfully")
+                        print(f"Outline generation completed successfully")
                         break  # Success, exit the retry loop
                     else:
-                        print(f"Worker returned False on attempt {attempt + 1}")
+                        print(f"Outline generation returned False on attempt {attempt + 1}")
                         if attempt < max_attempts - 1:  # Not the last attempt
                             print(f"Retrying in {delay} seconds...")
                             time.sleep(delay)
                             delay *= 2  # Exponential backoff
                         else:
-                            print(f"Worker failed after all {max_attempts} attempts")
+                            print(f"Outline generation failed after all {max_attempts} attempts")
+                            return  # Exit if outline generation fails
                             
                 except Exception as e:
                     print(f"Attempt {attempt + 1} failed with exception: {e}")
@@ -455,10 +546,14 @@ def main(title="", code=""):
                         time.sleep(delay)
                         delay *= 2  # Exponential backoff
                     else:
-                        print(f"Worker failed after all {max_attempts} attempts")
+                        print(f"Outline generation failed after all {max_attempts} attempts")
+                        return  # Exit if outline generation fails
+    else:
+        print("✓ Outline.json found, skipping outline generation")
     
-    # at this point, the outline is ready
-    # pass a page worker that accepts a page argument and not the one that starts the browser, the browser starting will be put inside the paralle sections function
+    # At this point, the outline should be ready
+    # Now check if we need to process sections
+    print("Starting section script generation...")
     from get_section_script import get_section_script
     parallel_sections(
         page_worker_func=get_section_script,
@@ -466,10 +561,5 @@ def main(title="", code=""):
         title=title, 
         code=code
     )
-
-
-# Example usage
-if __name__ == "__main__":
-    main()
 
 
